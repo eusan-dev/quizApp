@@ -1,14 +1,17 @@
-let gameId = null;
+let gameId;
 let questions = [];
-let timerInterval;
-let timeLeft = 120; // 2 minutes
+let timer;
+let timeLeft = 120; // in seconds
 
+// Start quiz when page loads
 async function startQuiz() {
   try {
-    const res = await fetch('/api/start');
-    const data = await res.json();
+    const response = await fetch('/api/start');
+    const data = await response.json();
+
     gameId = data.gameId;
     questions = data.questions;
+
     renderQuestions(questions);
     startTimer();
   } catch (error) {
@@ -16,85 +19,78 @@ async function startQuiz() {
   }
 }
 
+// Render questions to the page
 function renderQuestions(questions) {
   const container = document.getElementById('quiz-container');
   container.innerHTML = '';
 
-  questions.forEach((q, index) => {
-    const questionDiv = document.createElement('div');
-    questionDiv.classList.add('question');
-
-    const questionText = document.createElement('p');
-    questionText.innerText = `${index + 1}. ${q.question}`;
-    questionDiv.appendChild(questionText);
-
-    q.options.forEach((opt, optIndex) => {
-      const label = document.createElement('label');
-      label.innerHTML = `
-        <input type="radio" name="q${index}" value="${opt}"> ${opt}
-      `;
-      questionDiv.appendChild(label);
-      questionDiv.appendChild(document.createElement('br'));
-    });
-
-    container.appendChild(questionDiv);
-    container.appendChild(document.createElement('hr'));
+  questions.forEach((q, i) => {
+    const qDiv = document.createElement('div');
+    qDiv.innerHTML = `
+      <p>${i + 1}. ${q.question}</p>
+      ${q.choices.map((choice, j) =>
+        `<label>
+          <input type="radio" name="q${i}" value="${choice}" />
+          ${choice}
+        </label><br>`).join('')}
+    `;
+    container.appendChild(qDiv);
   });
 }
 
-function collectAnswers() {
-  const answers = [];
-  questions.forEach((_, index) => {
-    const selected = document.querySelector(`input[name="q${index}"]:checked`);
-    answers.push(selected ? selected.value : null);
-  });
-  return answers;
+// Timer logic
+function startTimer() {
+  const timerDiv = document.getElementById('timer');
+  timerDiv.textContent = `Time left: ${timeLeft} seconds`;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    timerDiv.textContent = `Time left: ${timeLeft} seconds`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      submitQuiz(); // auto submit
+    }
+  }, 1000);
 }
 
+// Collect and submit answers
 async function submitQuiz() {
-  clearInterval(timerInterval);
-  const userAnswers = collectAnswers();
+  clearInterval(timer);
+
+  const userAnswers = [];
+  for (let i = 0; i < questions.length; i++) {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    userAnswers.push(selected ? selected.value : null);
+  }
 
   try {
-    const res = await fetch('/api/submit', {
+    const response = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ gameId, userAnswers })
     });
 
-    const result = await res.json();
+    const result = await response.json();
 
-    if (res.ok) {
+    if (response.ok) {
       showScore(result.score, result.timeTaken);
     } else {
-      alert(result.error || 'Something went wrong.');
+      alert(result.error);
     }
   } catch (error) {
     console.error('Error submitting quiz:', error);
   }
 }
 
+// Show the final score
 function showScore(score, timeTaken) {
   const container = document.getElementById('quiz-container');
   container.innerHTML = `
-    <h2>Your Score: ${score} / ${questions.length}</h2>
+    <h2>Quiz Completed!</h2>
+    <p>Your Score: ${score}/10</p>
     <p>Time Taken: ${Math.round(timeTaken)} seconds</p>
   `;
-  document.getElementById('timer').innerText = '';
-}
 
-function startTimer() {
-  const timerDisplay = document.getElementById('timer');
-  timerDisplay.innerText = `Time left: ${timeLeft}s`;
-
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timerDisplay.innerText = `Time left: ${timeLeft}s`;
-
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      alert("Time's up! Submitting automatically...");
-      submitQuiz();
-    }
-  }, 1000);
+  document.getElementById('timer').textContent = '';
 }
