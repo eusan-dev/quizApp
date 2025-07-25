@@ -1,3 +1,5 @@
+console.log('Quiz started. Game ID:', gameId);
+
 let gameId;
 let questions = [];
 let timer;
