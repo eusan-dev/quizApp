@@ -22,11 +22,52 @@ function getRandomQuestions(count = 10) { //helper func
   return shuffled.slice(0, count); // return shuffled 10 questions
 }
 
-app.get('/api/start', (req, res) => { //start quiz
-  const selectedQuestions = getRandomQuestions(); // pick 10 questions
-  res.json({ questions: selectedQuestions }); //sned the questions to client
-});
+let gameSessions = {}; //store ongoing quiz sessions
 
+app.get('/api/start', (req, res) => {
+    const selectedQuestions = getRandomQuestions(); // Pick 10 questions
+    const gameId = Date.now().toString(); // Use timestamp as unique ID
+    const startTime = Date.now();//record quiz start time
+  
+    gameSessions[gameId] = { //save game session
+      questions: selectedQuestions,
+      startTime: startTime,
+      score: 0
+    };
+  
+    res.json({ gameId, questions: selectedQuestions, startTime }); //send session info
+  });
+  
+  app.post('/api/submit', (req, res) => {
+    const { gameId, userAnswers } = req.body;
+  
+    const session = gameSessions[gameId];
+    if (!session) {
+      return res.status(400).json({ error: 'Invalid or expired game session' });
+    }
+  
+    const elapsedTime = (Date.now() - session.startTime) / 1000; //show time in secs
+  
+    if (elapsedTime > 120) {
+      delete gameSessions[gameId]; //remove expired game sessions
+      return res.status(403).json({ error: 'uhoh! Times up! u took all of 120 seconds' });
+    }
+  
+    let score = 0;
+    for (let i = 0; i < session.questions.length; i++) {
+      if (userAnswers[i] === session.questions[i].answer) {
+        score++;
+      }
+    }
+  
+    session.score = score;
+    const finalScore = session.score;
+  
+    delete gameSessions[gameId]; //remove after quiz is done
+  
+    res.json({ score: finalScore, timeTaken: elapsedTime });
+  });
+  
 
 app.listen(PORT, () => { //start server 
   console.log(`Server running at http://localhost:${PORT}`); 
