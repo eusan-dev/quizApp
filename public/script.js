@@ -1,20 +1,12 @@
-console.log('Quiz started. Game ID:', gameId);
-
-let gameId;
+let gameId = null;
 let questions = [];
-let timer;
-let timeLeft = 120;
+let timerInterval;
+let timeLeft = 120; // 2 minutes
 
-// DOM elements
-const quizContainer = document.getElementById('quiz-container');
-const timerDisplay = document.getElementById('timer');
-const resultContainer = document.getElementById('result');
-
-// Start Quiz
 async function startQuiz() {
   try {
-    const questions = await fetch('/api/start');
-    const data = await questions.json();
+    const res = await fetch('/api/start');
+    const data = await res.json();
     gameId = data.gameId;
     questions = data.questions;
     renderQuestions(questions);
@@ -24,91 +16,85 @@ async function startQuiz() {
   }
 }
 
-// Render Questions Dynamically
 function renderQuestions(questions) {
-  quizContainer.innerHTML = '';
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
   questions.forEach((q, index) => {
-    const questionBlock = document.createElement('div');
-    questionBlock.className = 'question-block';
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('question');
 
-    questionBlock.innerHTML = `
-      <h3>${index + 1}. ${q.question}</h3>
-      ${q.choices.map((choice, i) => `
-        <label>
-          <input type="radio" name="q${index}" value="${choice}">
-          ${choice}
-        </label><br>
-      `).join('')}
-    `;
+    const questionText = document.createElement('p');
+    questionText.innerText = `${index + 1}. ${q.question}`;
+    questionDiv.appendChild(questionText);
 
-    quizContainer.appendChild(questionBlock);
+    q.options.forEach((opt, optIndex) => {
+      const label = document.createElement('label');
+      label.innerHTML = `
+        <input type="radio" name="q${index}" value="${opt}"> ${opt}
+      `;
+      questionDiv.appendChild(label);
+      questionDiv.appendChild(document.createElement('br'));
+    });
+
+    container.appendChild(questionDiv);
+    container.appendChild(document.createElement('hr'));
   });
-
-  // Submit Button
-  const submitBtn = document.createElement('button');
-  submitBtn.textContent = 'Submit Answers';
-  submitBtn.onclick = submitAnswers;
-  quizContainer.appendChild(submitBtn);
 }
 
-// Start Countdown Timer
-function startTimer() {
-  timerDisplay.textContent = `Time left: ${timeLeft}s`;
-  timer = setInterval(() => {
-    timeLeft--;
-    timerDisplay.textContent = `Time left: ${timeLeft}s`;
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      submitAnswers();
-    }
-  }, 1000);
+function collectAnswers() {
+  const answers = [];
+  questions.forEach((_, index) => {
+    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+    answers.push(selected ? selected.value : null);
+  });
+  return answers;
 }
 
-// Collect and Submit Answers
-async function submitAnswers() {
-  clearInterval(timer);
-  const userAnswers = [];
-
-  for (let i = 0; i < questions.length; i++) {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    userAnswers.push(selected ? selected.value : null);
-  }
+async function submitQuiz() {
+  clearInterval(timerInterval);
+  const userAnswers = collectAnswers();
 
   try {
-    const response = await fetch('/api/submit', {
+    const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ gameId, userAnswers })
     });
 
-    const result = await response.json();
+    const result = await res.json();
 
-    if (response.ok) {
-      displayScore(result.score, result.timeTaken);
-      playSuccessSound();
+    if (res.ok) {
+      showScore(result.score, result.timeTaken);
     } else {
-      resultContainer.innerHTML = `<p style="color:red">${result.error}</p>`;
+      alert(result.error || 'Something went wrong.');
     }
   } catch (error) {
-    console.error('Submission failed:', error);
+    console.error('Error submitting quiz:', error);
   }
 }
 
-// Show Final Score
-function displayScore(score, timeTaken) {
-  resultContainer.innerHTML = `
-    <h2>Quiz Complete!</h2>
-    <p>Your Score: ${score} / 10</p>
+function showScore(score, timeTaken) {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = `
+    <h2>Your Score: ${score} / ${questions.length}</h2>
     <p>Time Taken: ${Math.round(timeTaken)} seconds</p>
   `;
+  document.getElementById('timer').innerText = '';
 }
 
-// Optional Sound Effect
-function playSuccessSound() {
-  const audio = new Audio('success.mp3'); // Add this file in /public
-  audio.play();
-}
+function startTimer() {
+  const timerDisplay = document.getElementById('timer');
+  timerDisplay.innerText = `Time left: ${timeLeft}s`;
 
-// Call startQuiz() when ready (e.g., after button click or on load)
-window.onload = startQuiz;
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDisplay.innerText = `Time left: ${timeLeft}s`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert("Time's up! Submitting automatically...");
+      submitQuiz();
+    }
+  }, 1000);
+}
