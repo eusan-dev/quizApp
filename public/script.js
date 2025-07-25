@@ -63,3 +63,50 @@ function startTimer() {
   }, 1000);
 }
 
+// Collect and Submit Answers
+async function submitAnswers() {
+  clearInterval(timer);
+  const userAnswers = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    userAnswers.push(selected ? selected.value : null);
+  }
+
+  try {
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId, userAnswers })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      displayScore(result.score, result.timeTaken);
+      playSuccessSound();
+    } else {
+      resultContainer.innerHTML = `<p style="color:red">${result.error}</p>`;
+    }
+  } catch (error) {
+    console.error('Submission failed:', error);
+  }
+}
+
+// Show Final Score
+function displayScore(score, timeTaken) {
+  resultContainer.innerHTML = `
+    <h2>Quiz Complete!</h2>
+    <p>Your Score: ${score} / 10</p>
+    <p>Time Taken: ${Math.round(timeTaken)} seconds</p>
+  `;
+}
+
+// Optional Sound Effect
+function playSuccessSound() {
+  const audio = new Audio('success.mp3'); // Add this file in /public
+  audio.play();
+}
+
+// Call startQuiz() when ready (e.g., after button click or on load)
+window.onload = startQuiz;
