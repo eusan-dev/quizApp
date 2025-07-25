@@ -11,8 +11,8 @@ const resultContainer = document.getElementById('result');
 // Start Quiz
 async function startQuiz() {
   try {
-    const response = await fetch('/api/start');
-    const data = await response.json();
+    const questions = await fetch('/api/start');
+    const data = await questions.json();
     gameId = data.gameId;
     questions = data.questions;
     renderQuestions(questions);
