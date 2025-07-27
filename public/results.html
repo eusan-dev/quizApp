@@ -2,8 +2,7 @@
 <html>
 
 <head>
-    <title>Quiz App - Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <title>QuizApp - Results</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -20,17 +19,19 @@
         </div>
     </header>
 
-    <div class="container">
-        <h1>Welcome to QuizApp</h1>
-        <p class="warning"> Note: You will have a 2-minute timer to complete the quiz!</p>
-        <button onclick="location.href='quiz.html'">Start Quiz</button>
+    <div class="container" id="results-container">
+        <h2>Quiz Completed!</h2>
+        <p>Your Score: <span id="score">0</span>/10</p>
+        <p>Time Taken: <span id="time">0</span> seconds</p>
     </div>
     <footer class="site-footer">
-        <div class="footer-wrapper">
-            <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
-            <p>QuizApp © 2025</p>
-        </div>
+        <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
+        <p>QuizApp © 2025</p>
     </footer>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('score').textContent = params.get("score") || 0;
+        document.getElementById('time').textContent = Math.round(params.get("time") || 0);
+    </script>
 </body>
-
 </html>

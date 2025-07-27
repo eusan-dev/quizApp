@@ -94,3 +94,4 @@ function showScore(score, timeTaken) {
 
   document.getElementById('timer').textContent = '';
 }
+
