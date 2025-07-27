@@ -129,6 +129,10 @@ function showTimesUp() {
 function restartQuiz() {
   location.reload(); // reload the page to restart quiz
 }
+function restartQuiz() {
+  window.location.href = "quiz.html";
+}
+
 
 function nextQuestion() {
   const selected = document.querySelector('input[name="answer"]:checked');
