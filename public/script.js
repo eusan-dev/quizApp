@@ -213,40 +213,20 @@ async function submitQuiz() {
     console.error('Error submitting:', err);
   }
 }
-
+// Result Page
 function showFinalResult(score, timeTaken) {
-  const resultBox = document.createElement('div');
-  resultBox.innerHTML = `
-    <p style="margin-bottom: 10px;">🎉 Quiz Finished!</p>
-    <p>Your Score: <strong>${score}</strong></p>
-    <p>Time Taken: <strong>${timeTaken} sec</strong></p>
-    <button onclick="restartQuiz()" style="
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #ffccd5;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      cursor: pointer;
-    ">Restart Quiz</button>
-  `;
+  const result = {
+    score,
+    timeTaken: Math.round(timeTaken),
+    timestamp: new Date().toLocaleString()
+  };
 
-  Object.assign(resultBox.style, {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#ffccd5',
-    padding: '30px',
-    borderRadius: '15px',
-    fontWeight: 'bold',
-    fontSize: '1.1rem',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-    zIndex: '9999',
-    textAlign: 'center',
-    maxWidth: '90%',
-  });
+  const pastResults = JSON.parse(localStorage.getItem("quizResults")) || [];
+  pastResults.push(result);
+  localStorage.setItem("quizResults", JSON.stringify(pastResults));
 
-  document.body.appendChild(resultBox);
+  // Also redirect to results page (optional):
+  window.location.href = "results.html";
+  
 }
+

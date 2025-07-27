@@ -32,13 +32,16 @@ body {
   font-size: 2rem;
   font-weight: bold;
 }
+
 .logo a {
   text-decoration: none;
   color: #553f5c;
 }
+
 .logo span {
   color: #d6788d;
 }
+
 /* Timer & Warnings */
 #timer {
   font-size: 1.3rem;
@@ -46,6 +49,7 @@ body {
   color: #d6788d;
   margin-bottom: 20px;
 }
+
 .warning {
   color: #c23b22;
   font-weight: bold;
@@ -57,10 +61,12 @@ body {
   margin-bottom: 30px;
   text-align: left;
 }
+
 .question p {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 label {
   display: block;
   background-color: #f5f5f5;
@@ -71,13 +77,14 @@ label {
   border: 1px solid #eee;
   transition: background-color 0.2s ease;
 }
+
 input[type="radio"] {
   margin-right: 10px;
 }
 
 /* Buttons */
 button {
-  background-color: #d6788d;
+  background-color: #EDA9A9;
   color: white;
   border: none;
   border-radius: 25px;
@@ -87,24 +94,46 @@ button {
   transition: background-color 0.3s ease;
   margin-top: 20px;
 }
+
 button:hover {
-  background-color: #c35f7a;
+  background-color: #EDA9A9;
 }
+
 /* Results */
 #results-container {
   text-align: center;
   margin-top: 100px;
 }
+
 #results-container h2 {
   font-size: 2rem;
   color: #553f5c;
   margin-bottom: 10px;
 }
+
 #results-container p {
   font-size: 1.2rem;
-  color: #444;
+  color: #553f5c;
   margin: 8px 0;
 }
+
+.results-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #553f5c;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.score-line,
+.time-line {
+  font-size: 1.2rem;
+  color: #553f5c;
+  text-align: center;
+  margin: 10px 0;
+}
+
 /* Footer */
 .site-footer {
   background-color: transparent;
@@ -127,11 +156,12 @@ button:hover {
 
 .site-footer p {
   margin-top: -30px;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
   font-size: 0.9rem;
   color: #553f5c;
   font-weight: bold;
 }
+
 /* Header */
 .site-header {
   background-color: #fcd6dc;
@@ -155,10 +185,12 @@ button:hover {
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
+
 .logo a {
   text-decoration: none;
   color: #553f5c;
 }
+
 .logo span {
   color: #d6788d;
 }
@@ -174,35 +206,37 @@ button:hover {
   display: flex;
   gap: 1.5rem;
 }
+
 .nav-bar a {
   text-decoration: none;
   font-weight: bold;
   color: #553f5c;
 }
-.nav-bar a:hover {
-  color: #d6788d;
-}
+
 
 /* Responsive */
 @media (max-width: 600px) {
   .container {
     padding: 1rem;
   }
+
   .logo {
     font-size: 1.5rem;
   }
+
   .nav-bar {
     flex-direction: column;
     gap: 0.75rem;
     margin-top: 0.5rem;
   }
+
   button {
     width: 100%;
     font-size: 1rem;
   }
+
   label {
     font-size: 0.95rem;
     padding: 10px;
   }
 }
-
