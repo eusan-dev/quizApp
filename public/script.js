@@ -60,6 +60,8 @@ function renderQuestion() {
   const q = questions[currentQuestionIndex];
   const container = document.getElementById('quiz-options');
   const questionText = document.getElementById('quiz-question');
+  const counter = document.getElementById('quiz-counter');
+  counter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
 
   questionText.textContent = q.question;
   container.innerHTML = '';
