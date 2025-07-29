@@ -10,6 +10,7 @@
 <body onload="startQuiz()">
 
     <body>
+        <!-- Header Section -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
@@ -21,14 +22,14 @@
                 </nav>
             </div>
         </header>
-
+        <!-- Quiz Taking Section -->
         <div class="quiz-card">
             <div class="quiz-header">
                 <span id="quiz-category">Category: General</span>
                 <span id="quiz-counter">1 / 10</span>
             </div>
 
-            <div id="timer" class="timer-box">Time Left: 120 seconds</div>
+            <div id="timer" class="timer-box">Time Left: 90 seconds</div>
 
             <form id="quiz-form">
                 <h2 id="quiz-question" class="question-text"></h2>
@@ -38,6 +39,7 @@
             <button id="next-btn" onclick="nextQuestion()">Next</button>
         </div>
 
+        <!-- Footer Section -->
         <footer class="site-footer">
             <div class="footer-wrapper">
                 <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
