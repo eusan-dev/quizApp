@@ -1,74 +1,166 @@
-const express = require('express'); //import express framework
-const fs = require('fs'); // import the file module to read files
-const path = require('path'); // import path module to read path 
+// server.js
 
-const app = express(); // express app
-const PORT = process.env.PORT || 3000; //use port 3000
+// Import required modules
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const axios = require('axios');
+const { connect, getCollection } = require('./models/db');
+const userRoutes = require('./routes/user');
 
-app.use(express.static(path.join(__dirname, 'public')));//for public folder's static files
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());//make JSON -> JS objects
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-let allQuestions = []; //load all questions from questions.json file when the server starts
-try {
-  const data = fs.readFileSync('questions.json', 'utf8'); //read the file
-  allQuestions = JSON.parse(data); //make JSON into JS array
-} catch (err) {
-  console.error('Error reading questions.json:', err); //error check
-}
+// Connect to MongoDB
+connect()
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB connection failed:", err));
 
-function getRandomQuestions(count = 10) { //helper func
-  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5); // shuffle the questions
-  return shuffled.slice(0, count); // return shuffled 10 questions
-}
+// Mount auth routes
+app.use('/api/user', userRoutes);
 
-let gameSessions = {}; //store ongoing quiz sessions
+// In-memory session store
+let gameSessions = {};
 
-app.get('/api/start', (req, res) => {
-    const selectedQuestions = getRandomQuestions(); // Pick 10 questions
-    const gameId = Date.now().toString(); // Use timestamp as unique ID
-    const startTime = Date.now();//record quiz start time
-  
-    gameSessions[gameId] = { //save game session
-      questions: selectedQuestions,
-      startTime: startTime,
+// ---------------------------
+// Start Quiz - /api/start
+// ---------------------------
+app.get('/api/start', async (req, res) => {
+  const amount = parseInt(req.query.amount) || 10;
+  const category = req.query.category || 9;
+
+  try {
+    const response = await axios.get('https://opentdb.com/api.php', {
+      params: {
+        amount,
+        category,
+        type: 'multiple',
+        encode: 'url3986'
+      }
+    });
+
+    const rawQuestions = response.data.results;
+
+    const formattedQuestions = rawQuestions.map(q => {
+      const choices = [...q.incorrect_answers.map(decodeURIComponent)];
+      const correctIndex = Math.floor(Math.random() * 4);
+      choices.splice(correctIndex, 0, decodeURIComponent(q.correct_answer));
+
+      return {
+        question: decodeURIComponent(q.question),
+        answer: String.fromCharCode(65 + correctIndex),
+        A: choices[0],
+        B: choices[1],
+        C: choices[2],
+        D: choices[3]
+      };
+    });
+
+    const gameId = Date.now().toString();
+    gameSessions[gameId] = {
+      questions: formattedQuestions,
+      startTime: Date.now(),
       score: 0
     };
-  
-    res.json({ gameId, questions: selectedQuestions, startTime }); //send session info
-  });
-  
-  app.post('/api/submit', (req, res) => {
-    const { gameId, userAnswers } = req.body;
-  
-    const session = gameSessions[gameId];
-    if (!session) {
-      return res.status(400).json({ error: 'Invalid or expired game session' });
-    }
-  
-    const elapsedTime = (Date.now() - session.startTime) / 1000; //show time in secs
-  
-    if (elapsedTime > 120) {
-      delete gameSessions[gameId]; //remove expired game sessions
-      return res.status(403).json({ error: 'uhoh! Times up! u took all of 120 seconds' });
-    }
-  
-    let score = 0;
-    for (let i = 0; i < session.questions.length; i++) {
-      if (userAnswers[i] === session.questions[i].answer) {
-        score++;
-      }
-    }
-  
-    session.score = score;
-    const finalScore = session.score;
-  
-    delete gameSessions[gameId]; //remove after quiz is done
-  
-    res.json({ score: finalScore, timeTaken: elapsedTime });
-  });
-  
 
-app.listen(PORT, () => { //start server 
-  console.log(`Server running at http://localhost:${PORT}`); 
+    res.json({ gameId, questions: formattedQuestions });
+  } catch (err) {
+    console.error("Trivia API error:", err);
+    res.status(500).json({ error: "Failed to fetch quiz questions" });
+  }
+});
+
+// ---------------------------
+// Submit Quiz - /api/submit
+// ---------------------------
+app.post('/api/submit', async (req, res) => {
+  const { gameId, userAnswers, username } = req.body;
+
+  const session = gameSessions[gameId];
+  if (!session) {
+    return res.status(400).json({ error: "Invalid or expired session" });
+  }
+
+  const elapsedTime = (Date.now() - session.startTime) / 1000;
+
+  if (elapsedTime > 120) {
+    delete gameSessions[gameId];
+    return res.status(403).json({ error: "⏰ Time's up! Quiz expired." });
+  }
+
+  let score = 0;
+  for (let i = 0; i < session.questions.length; i++) {
+    if (userAnswers[i] === session.questions[i].answer) {
+      score++;
+    }
+  }
+
+  try {
+    const userScores = getCollection('userScores');
+    await userScores.insertOne({
+      username,
+      score,
+      timeTaken: elapsedTime,
+      numQuestions: userAnswers.length,
+      timestamp: new Date()
+    });
+
+    delete gameSessions[gameId];
+
+    res.json({ score, timeTaken: elapsedTime });
+  } catch (err) {
+    console.error("❌ Error saving score:", err.message);
+    res.status(500).json({ error: "Failed to save score to database", detail: err.message });
+  }
+});
+
+// ---------------------------
+// User History - /api/history/:username
+// ---------------------------
+app.get('/api/history/:username', async (req, res) => {
+  const username = req.params.username;
+
+  try {
+    const userScores = getCollection('userScores');
+    const history = await userScores
+      .find({ username })
+      .sort({ timestamp: -1 })
+      .toArray();
+
+    res.json(history);
+  } catch (err) {
+    console.error("❌ Error fetching history:", err);
+    res.status(500).json({ error: "Failed to fetch history" });
+  }
+});
+
+// ---------------------------
+// Leaderboard - /api/leaderboard
+// ---------------------------
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const userScores = getCollection('userScores');
+    const topPlayers = await userScores
+      .find({})
+      .sort({ score: -1, timeTaken: 1 })
+      .limit(10)
+      .toArray();
+
+    res.json(topPlayers);
+  } catch (err) {
+    console.error("❌ Error fetching leaderboard:", err);
+    res.status(500).json({ error: "Failed to fetch leaderboard" });
+  }
+});
+
+// ---------------------------
+// Start Server
+// ---------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
