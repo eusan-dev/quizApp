@@ -186,7 +186,62 @@ body {
   font-weight: bold;
   text-decoration: underline;
 }
+/* Setup Quiz  */
+/* Setup Quiz Styling */
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 80vh;
+}
 
+.setup-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+  color: #4f345a;
+}
+
+.setup-card {
+  background: #ffeef2;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.setup-label {
+  font-size: 1rem;
+  color: #4f345a;
+}
+
+.setup-select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.setup-button {
+  background-color: #ee9ca7;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.setup-button:hover {
+  background-color: #e68a95;
+}
 
 /* Quiz content */
 .question {
