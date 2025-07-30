@@ -15,14 +15,28 @@
             <div class="header-content">
                 <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
                 <i class="ri-menu-line menu-icon" onclick="toggleMenu()"></i>
-                <nav class="nav-bar" id="nav-bar">
-                    <a href="index.html">Home</a>
+                <nav class="nav-bar">
+                    <a href="home.html">Home</a>
                     <a href="quiz.html">Take Quiz</a>
                     <a href="results.html">Results</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                    <a href="profile.html">Profile</a>
                 </nav>
-            </div>
         </header>
+
         <!-- Quiz Taking Section -->
+        <div id="setup-screen" class="container">
+            <h2>Select how many questions to begin</h2>
+            <label for="question-amount">How many questions?</label>
+            <select id="question-amount">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
         <div class="quiz-card">
             <div class="quiz-header">
                 <span id="quiz-category">Category: General</span>
@@ -46,7 +60,6 @@
                 <p>QuizApp © 2025</p>
             </div>
         </footer>
-
         <script src="script.js"></script>
     </body>
 

@@ -1,38 +1,109 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Quiz App - Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>QuizApp - Welcome</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <!-- Header Section -->
-    <header class="site-header">
-        <div class="header-content">
-            <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
-            <i class="ri-menu-line menu-icon" onclick="toggleMenu()"></i>
-            <nav class="nav-bar" id="nav-bar">
-                <a href="index.html">Home</a>
-                <a href="quiz.html">Take Quiz</a>
-                <a href="results.html">Results</a>
-            </nav>
-        </div>
-    </header>
-    <!-- Home Section -->
-    <div class="container">
-        <h1>Welcome to QuizApp</h1>
-        <p class="warning"> Note: You will have a 1.5-minute timer to complete the quiz!</p>
-        <button onclick="location.href='quiz.html'">Start Quiz</button>
-    </div>
-    <!-- Footer Section -->
-    <footer class="site-footer">
-        <div class="footer-wrapper">
-            <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
-            <p>QuizApp © 2025</p>
-        </div>
-    </footer>
-</body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
 
+    </div>
+  </header>
+
+  <!-- Auth Section -->
+  <div class="signup-container">
+    <!-- Signup Box -->
+    <div class="auth-box" id="signup-box">
+      <h2>Sign Up to Start</h2>
+      <input type="text" id="signup-username" placeholder="Username" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required>
+      <button onclick="signupUser()">Sign Up</button>
+      <p class="auth-toggle">Already have an account? <a href="#" onclick="toggleAuth()">Log In</a></p>
+      <p id="signup-msg"></p>
+    </div>
+
+    <!-- Login Box -->
+    <div class="auth-box" id="login-box" style="display: none;">
+      <h2>Log In</h2>
+      <input type="text" id="login-username" placeholder="Username" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button onclick="loginUser()">Log In</button>
+      <p class="auth-toggle">New here? <a href="#" onclick="toggleAuth()">Sign Up</a></p>
+      <p id="login-msg"></p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function toggleAuth() {
+      const signupBox = document.getElementById('signup-box');
+      const loginBox = document.getElementById('login-box');
+      signupBox.style.display = signupBox.style.display === 'none' ? 'block' : 'none';
+      loginBox.style.display = loginBox.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function signupUser() {
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const msg = document.getElementById('signup-msg');
+
+      const res = await fetch('/api/user/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        msg.textContent = "✅ Signup successful! Redirecting...";
+        msg.style.color = "#4CAF50";
+        localStorage.setItem('username', username);
+        setTimeout(() => {
+          window.location.href = 'quiz.html';
+        }, 1500);
+      } else {
+        msg.textContent = `❌ ${data.error}`;
+        msg.style.color = "#d6788d";
+      }
+    }
+
+    async function loginUser() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const msg = document.getElementById('login-msg');
+
+      const res = await fetch('/api/user/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        msg.textContent = "✅ Login successful! Redirecting...";
+        msg.style.color = "#4CAF50";
+        localStorage.setItem('username', username);
+        setTimeout(() => {
+          window.location.href = 'quiz.html';
+        }, 1500);
+      } else {
+        msg.textContent = `❌ ${data.error}`;
+        msg.style.color = "#d6788d";
+      }
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-wrapper">
+      <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
+      <p>QuizApp © 2025</p>
+    </div>
+  </footer>
+</body>
 </html>
