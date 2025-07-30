@@ -1,25 +1,17 @@
-/* Reset and base */
+/* Reset and base styles */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
+html, body {
+  height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #ffffff;
   color: #553f5c;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-/* Layout */
-.container {
-  max-width: 500px;
-  margin: 100px auto;
-  padding-top: 100px;
-  text-align: center;
 }
 
 /* Header */
@@ -27,7 +19,6 @@ body {
   background-color: #fcd6dc;
   padding: 1.5rem 0;
   text-align: center;
-  position: relative;
   z-index: 10;
 }
 
@@ -55,13 +46,6 @@ body {
   color: #d6788d;
 }
 
-.menu-icon {
-  font-size: 1.5rem;
-  color: #553f5c;
-  cursor: pointer;
-  display: none;
-}
-
 .nav-bar {
   display: flex;
   gap: 1.5rem;
@@ -73,101 +57,49 @@ body {
   color: #553f5c;
 }
 
-/* Timer & Warnings */
-#timer {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #d6788d;
-  margin-bottom: 20px;
+/* Auth Main */
+.auth-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.warning {
-  color: #c23b22;
-  font-weight: bold;
-  margin: 20px 0;
-}
-/* Sign Up */
-.signup-container {
-  max-width: 400px;
-  margin: 120px auto;
-  padding: 40px;
-  border-radius: 15px;
-  background-color: #fff0f5;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.signup-container h1 {
-  margin-bottom: 25px;
-  font-size: 2rem;
-  color: #553f5c;
-}
-
-#signup-form input {
-  display: block;
-  width: 100%;
-  padding: 12px 15px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 1rem;
-}
-
-#signup-form button {
-  width: 100%;
-  padding: 12px;
-  background-color: #EDA9A9;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#signup-form button:hover {
-  background-color: #e68e8e;
-}
-
-#signup-msg {
-  margin-top: 15px;
-  font-size: 0.95rem;
-}
-/* Auth-box */
+/* Auth Box (Sign up / Login) */
 .auth-box {
   background-color: #ffe9ee;
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
-  width: 300px;
-  margin: 4rem auto;
+  width: 320px;
 }
 
 .auth-box h2 {
   color: #553f5c;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
 .auth-box input {
-  display: block;
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px;
   margin: 10px 0;
-  border-radius: 20px;
-  border: 1px solid #ddd;
+  border-radius: 12px;
+  border: 1px solid #ccc;
   font-size: 1rem;
 }
 
 .auth-box button {
   width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  background-color: #EDA9A9;
-  color: white;
-  font-weight: bold;
-  border: none;
+  padding: 12px;
   margin-top: 10px;
+  background-color: #eda9a9;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -175,221 +107,17 @@ body {
   background-color: #e28d8d;
 }
 
-.auth-toggle {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #553f5c;
-}
-
-.auth-toggle a {
-  color: #553f5c;
-  font-weight: bold;
-  text-decoration: underline;
-}
-/* Setup Quiz  */
-/* Setup Quiz Styling */
-.setup-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-  min-height: 80vh;
-}
-
-.setup-title {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  font-weight: bold;
-  color: #4f345a;
-}
-
-.setup-card {
-  background: #ffeef2;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  padding: 30px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.setup-label {
-  font-size: 1rem;
-  color: #4f345a;
-}
-
-.setup-select {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.setup-button {
-  background-color: #ee9ca7;
-  border: none;
-  padding: 12px;
-  border-radius: 25px;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.setup-button:hover {
-  background-color: #e68a95;
-}
-
-/* Quiz content */
-.question {
-  margin-bottom: 30px;
-  text-align: left;
-}
-
-.question p {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-label {
-  display: block;
-  background-color: #f5f5f5;
-  padding: 12px;
-  margin: 6px 0;
-  border-radius: 20px;
-  cursor: pointer;
-  border: 1px solid #eee;
-  transition: background-color 0.2s ease;
-}
-
-input[type="radio"] {
-  margin-right: 10px;
-}
-
-
-/* Buttons */
-button {
-  background-color: #EDA9A9;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 12px 30px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-}
-
-button:hover {
-  background-color: #EDA9A9;
-}
-
-/* Results */
-#results-container {
-  text-align: center;
-  margin-top: 100px;
-}
-
-#results-container h2 {
-  font-size: 2rem;
-  color: #553f5c;
-  margin-bottom: 10px;
-}
-
-#results-container p {
-  font-size: 1.2rem;
-  color: #553f5c;
-  margin: 8px 0;
-}
-
-.results-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #553f5c;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.score-line,
-.time-line {
-  font-size: 1.2rem;
-  color: #553f5c;
-  text-align: center;
-  margin: 10px 0;
-}
-
-/* Footer */
-.site-footer {
-  background-color: transparent;
-  margin-top: auto;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.footer-wrapper {
-  position: relative;
-}
-
-.footer-ornament {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.site-footer p {
-  margin-top: -30px;
-  padding-bottom: 30px;
-  font-size: 0.9rem;
-  color: #553f5c;
-  font-weight: bold;
-}
-/* Responsive */
-@media (max-width: 600px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .logo {
-    font-size: 1.5rem;
-  }
-
-  .nav-bar {
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
-
-  button {
-    width: 100%;
-    font-size: 1rem;
-  }
-
-  label {
-    font-size: 0.95rem;
-    padding: 10px;
-  }
-}
-/*leaderboard*/
-/* Leaderboard Section */
+/* Leaderboard */
 #leaderboard-container {
-  margin-top: 30px;
+  margin: 40px auto 80px;
   padding: 20px;
   background-color: #fff0f5;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
+  text-align: center;
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #553f5c;
 }
 
 #leaderboard-container p {
@@ -411,4 +139,62 @@ h2 {
   margin-top: 40px;
   color: #553f5c;
   font-size: 2rem;
+}
+
+/* Footer */
+.site-footer {
+  background-color: transparent;
+  text-align: center;
+  position: relative;
+  margin-top: auto;
+}
+
+.footer-wrapper {
+  position: relative;
+}
+
+.footer-ornament {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.site-footer p {
+  margin-top: -30px;
+  padding-bottom: 30px;
+  font-size: 0.9rem;
+  color: #553f5c;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  label {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .auth-box {
+    width: 90%;
+  }
+
+  #leaderboard-container {
+    width: 90%;
+  }
 }
