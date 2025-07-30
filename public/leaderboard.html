@@ -35,3 +35,29 @@
   </script>
 </body>
 </html>
+=======
+<h2>Leaderboard - Top 10 Players</h2>
+<div id="leaderboard-container"></div>
+
+<script>
+  fetch('/api/leaderboard')
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('leaderboard-container');
+
+      if (data.length === 0) {
+        container.innerHTML = "<p>No scores submitted yet.</p>";
+        return;
+      }
+
+      data.forEach((player, i) => {
+        const row = document.createElement('p');
+        row.textContent = `#${i + 1}: ${player.username} — ${player.score} pts in ${Math.round(player.timeTaken)} sec`;
+        container.appendChild(row);
+      });
+    })
+    .catch(err => {
+      console.error("Failed to load leaderboard:", err);
+      document.getElementById('leaderboard-container').innerHTML = "<p style='color:red;'>Failed to load leaderboard.</p>";
+    });
+</script>

@@ -13,8 +13,8 @@ const timesUpSound = new Audio('ring.mp3'); // updated filename
 
 async function startQuiz() {
   try {
-    const res = await fetch('/api/start');
-    const data = await res.json();
+const amount = document.getElementById('question-amount')?.value || 10;
+const res = await fetch(`/api/start?amount=${amount}`);    const data = await res.json();
     gameId = data.gameId;
     questions = data.questions;
 
@@ -207,10 +207,12 @@ async function submitQuiz() {
   clearInterval(timer);
 
   try {
+    const username = localStorage.getItem("username");
+
     const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gameId, userAnswers })
+      body: JSON.stringify({ gameId, userAnswers, username })
     });
 
     const data = await res.json();
@@ -224,6 +226,7 @@ async function submitQuiz() {
     console.error('Error submitting:', err);
   }
 }
+
 // Result Page
 function showFinalResult(score, timeTaken) {
   const result = {
