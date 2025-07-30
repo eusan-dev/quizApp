@@ -1,0 +1,18 @@
+<script>
+  const username = localStorage.getItem("username");
+
+  fetch(`/api/history/${username}`)
+    .then(res => res.json())
+    .then(history => {
+      const container = document.getElementById('history-container') || document.createElement('div');
+      container.id = 'history-container';
+
+      history.forEach(entry => {
+        const row = document.createElement('p');
+        row.textContent = `Scored ${entry.score}/${entry.numQuestions} in ${Math.round(entry.timeTaken)} sec on ${new Date(entry.timestamp).toLocaleString()}`;
+        container.appendChild(row);
+      });
+
+      document.body.appendChild(container);
+    });
+</script>
