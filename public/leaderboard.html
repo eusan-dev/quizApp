@@ -1,31 +1,17 @@
-<<<<<<< HEAD
-=======
-<h2>Leaderboard - Top 10 Players</h2>
-<div id="leaderboard-container"></div>
-
-<script>
-  fetch('/api/leaderboard')
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('leaderboard-container');
-
-      if (data.length === 0) {
-        container.innerHTML = "<p>No scores submitted yet.</p>";
-        return;
-      }
->>>>>>> f6e2d66 (updated)
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Leaderboard - QuizApp</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+  <!-- Header Section -->
   <header class="site-header">
     <div class="header-content">
       <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
-      <nav class="nav-bar">
+      <nav class="nav-bar" id="nav-bar">
         <a href="index.html">Home</a>
         <a href="quiz.html">Take Quiz</a>
         <a href="results.html">Results</a>
@@ -35,11 +21,21 @@
     </div>
   </header>
 
+  <!-- Leaderboard Section -->
   <div class="container">
     <h2>Leaderboard - Top 10 Players</h2>
     <div id="leaderboard-container"></div>
   </div>
 
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="footer-wrapper">
+      <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
+      <p>QuizApp © 2025</p>
+    </div>
+  </footer>
+
+  <!-- Leaderboard Script -->
   <script>
     fetch('/api/leaderboard')
       .then(res => res.json())
@@ -61,17 +57,6 @@
         console.error("Failed to load leaderboard:", err);
         document.getElementById('leaderboard-container').innerHTML = "<p style='color:red;'>Failed to load leaderboard.</p>";
       });
-<<<<<<< HEAD
   </script>
 </body>
 </html>
-
-=======
-    })
-    .catch(err => {
-      console.error("Failed to load leaderboard:", err);
-      document.getElementById('leaderboard-container').innerHTML = "<p style='color:red;'>Failed to load leaderboard.</p>";
-    });
->>>>>>> f6e2d66 (updated)
-</script>
-
