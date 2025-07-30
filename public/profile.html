@@ -9,7 +9,7 @@
     <div class="header-content">
       <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
       <nav class="nav-bar">
-        <a href="home.html">Home</a>
+        <a href="index.html">Home</a>
         <a href="quiz.html">Take Quiz</a>
         <a href="results.html">Results</a>
         <a href="leaderboard.html">Leaderboard</a>
@@ -21,39 +21,33 @@
   <div class="container">
     <h1>Welcome, <span id="user"></span></h1>
     <h2>Your Play History</h2>
-    <ul id="history-list"></ul>
+    <div id="history-container"></div>
   </div>
 
   <script>
-    const user = localStorage.getItem("username");
-    document.getElementById("user").textContent = user;
-    fetch(`/api/history/${user}`)
+    const username = localStorage.getItem("username");
+    document.getElementById("user").textContent = username;
+
+    fetch(`/api/history/${username}`)
       .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById("history-list");
-        list.innerHTML = data.map(entry => `
-          <li>Score: ${entry.score}/ ${entry.numQuestions}, Time: ${Math.round(entry.timeTaken)}s</li>
-        `).join("");
+      .then(history => {
+        const container = document.getElementById('history-container');
+
+        if (history.length === 0) {
+          container.innerHTML = "<p>No quiz history yet.</p>";
+          return;
+        }
+
+        history.forEach(entry => {
+          const row = document.createElement('p');
+          row.textContent = `Scored ${entry.score}/${entry.numQuestions} in ${Math.round(entry.timeTaken)} sec on ${new Date(entry.timestamp).toLocaleString()}`;
+          container.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load history:", err);
+        document.getElementById("history-container").innerHTML = "<p style='color:red;'>Failed to load history.</p>";
       });
   </script>
 </body>
 </html>
-
-<script>
-  const username = localStorage.getItem("username");
-
-  fetch(`/api/history/${username}`)
-    .then(res => res.json())
-    .then(history => {
-      const container = document.getElementById('history-container') || document.createElement('div');
-      container.id = 'history-container';
-
-      history.forEach(entry => {
-        const row = document.createElement('p');
-        row.textContent = `Scored ${entry.score}/${entry.numQuestions} in ${Math.round(entry.timeTaken)} sec on ${new Date(entry.timestamp).toLocaleString()}`;
-        container.appendChild(row);
-      });
-
-      document.body.appendChild(container);
-    });
-</script>
