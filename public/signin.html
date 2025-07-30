@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign In - QuizApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <nav class="nav-bar">
+        <a href="home.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Sign In</h1>
+    <form id="signin-form">
+      <input type="text" placeholder="Username" id="username" required><br><br>
+      <input type="password" placeholder="Password" id="password" required><br><br>
+      <button type="submit">Sign In</button>
+    </form>
+    <p id="signin-msg"></p>
+  </div>
+
+  <script>
+    document.getElementById("signin-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const res = await fetch("/api/user/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("username", document.getElementById("username").value);
+        window.location.href = "profile.html";
+      } else {
+        document.getElementById("signin-msg").textContent = data.error;
+      }
+    });
+  </script>
+</body>
+</html>

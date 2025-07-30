@@ -1,16 +1,53 @@
-<script>
-  fetch('/api/leaderboard')
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('leaderboard-container') || document.createElement('div');
-      container.id = 'leaderboard-container';
 
-      data.forEach((player, i) => {
-        const row = document.createElement('p');
-        row.textContent = `#${i + 1}: ${player.username} — ${player.score} pts in ${Math.round(player.timeTaken)} sec`;
-        container.appendChild(row);
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard - QuizApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <nav class="nav-bar">
+        <a href="index.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2>Leaderboard - Top 10 Players</h2>
+    <div id="leaderboard-container"></div>
+  </div>
+
+  <script>
+    fetch('/api/leaderboard')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('leaderboard-container');
+
+        if (data.length === 0) {
+          container.innerHTML = "<p>No scores submitted yet.</p>";
+          return;
+        }
+
+        data.forEach((player, i) => {
+          const row = document.createElement('p');
+          row.textContent = `#${i + 1}: ${player.username} — ${player.score} pts in ${Math.round(player.timeTaken)} sec`;
+          container.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load leaderboard:", err);
+        document.getElementById('leaderboard-container').innerHTML = "<p style='color:red;'>Failed to load leaderboard.</p>";
       });
+  </script>
+</body>
+</html>
 
-      document.body.appendChild(container);
-    });
 </script>
+
