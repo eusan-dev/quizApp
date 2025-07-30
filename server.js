@@ -1,6 +1,4 @@
-// server.js
 
-// Import required modules
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -18,8 +16,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
 connect()
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB connection failed:", err));
+  .then(() => console.log(" MongoDB connected"))
+  .catch(err => console.error(" MongoDB connection failed:", err));
 
 // Mount auth routes
 app.use('/api/user', userRoutes);
@@ -27,9 +25,7 @@ app.use('/api/user', userRoutes);
 // In-memory session store
 let gameSessions = {};
 
-// ---------------------------
-// Start Quiz - /api/start
-// ---------------------------
+
 app.get('/api/start', async (req, res) => {
   const amount = parseInt(req.query.amount) || 10;
   const category = req.query.category || 9;
@@ -75,9 +71,6 @@ app.get('/api/start', async (req, res) => {
   }
 });
 
-// ---------------------------
-// Submit Quiz - /api/submit
-// ---------------------------
 app.post('/api/submit', async (req, res) => {
   const { gameId, userAnswers, username } = req.body;
 
@@ -114,14 +107,12 @@ app.post('/api/submit', async (req, res) => {
 
     res.json({ score, timeTaken: elapsedTime });
   } catch (err) {
-    console.error("❌ Error saving score:", err.message);
+    console.error("Error saving score:", err.message);
     res.status(500).json({ error: "Failed to save score to database", detail: err.message });
   }
 });
 
-// ---------------------------
-// User History - /api/history/:username
-// ---------------------------
+
 app.get('/api/history/:username', async (req, res) => {
   const username = req.params.username;
 
@@ -134,14 +125,11 @@ app.get('/api/history/:username', async (req, res) => {
 
     res.json(history);
   } catch (err) {
-    console.error("❌ Error fetching history:", err);
+    console.error("Error fetching history:", err);
     res.status(500).json({ error: "Failed to fetch history" });
   }
 });
 
-// ---------------------------
-// Leaderboard - /api/leaderboard
-// ---------------------------
 app.get('/api/leaderboard', async (req, res) => {
   try {
     const userScores = getCollection('userScores');
@@ -153,14 +141,12 @@ app.get('/api/leaderboard', async (req, res) => {
 
     res.json(topPlayers);
   } catch (err) {
-    console.error("❌ Error fetching leaderboard:", err);
+    console.error("Error fetching leaderboard:", err);
     res.status(500).json({ error: "Failed to fetch leaderboard" });
   }
 });
 
-// ---------------------------
-// Start Server
-// ---------------------------
+
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
