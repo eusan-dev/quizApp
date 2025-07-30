@@ -5,7 +5,7 @@
   <title>QuizApp - Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body onload="startQuiz()">
+<body>
   <!-- Header Section -->
   <header class="site-header">
     <div class="header-content">
@@ -45,27 +45,13 @@
     </form>
     <button id="next-btn" onclick="nextQuestion()">Next</button>
   </div>
-
-  <!-- Footer -->
+  <!-- Footer Section -->
   <footer class="site-footer">
     <div class="footer-wrapper">
       <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament" />
       <p>QuizApp © 2025</p>
     </div>
   </footer>
-
   <script src="script.js"></script>
-  <script>
-    function beginQuiz() {
-      const amount = document.getElementById('question-amount').value;
-      document.getElementById('setup-screen').style.display = 'none';
-      document.getElementById('quiz-box').style.display = 'block';
-      if (typeof loadQuiz === 'function') {
-        loadQuiz(amount);
-      } else {
-        console.error("loadQuiz(amount) function is not defined.");
-      }
-    }
-  </script>
 </body>
 </html>
