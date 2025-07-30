@@ -9,58 +9,65 @@ let timer;
 // Sound effects
 const correctSound = new Audio('correct.wav');
 const wrongSound = new Audio('wrong.ogg');
-const timesUpSound = new Audio('ring.mp3'); // updated filename
+const timesUpSound = new Audio('ring.mp3');
 
 async function startQuiz() {
   try {
-const amount = document.getElementById('question-amount')?.value || 10;
-const res = await fetch(`/api/start?amount=${amount}`);    const data = await res.json();
+    const amount = document.getElementById('question-amount')?.value || 10;
+    const res = await fetch(`/api/start?amount=${amount}`);
+    const data = await res.json();
     gameId = data.gameId;
     questions = data.questions;
 
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('quiz-card').style.display = 'block';
 
+    centerQuizLayout();
     renderQuestion();
     startTimer();
-     } catch (err) {
+  } catch (err) {
     console.error('Error starting quiz:', err);
   }
 }
 
-    // Center layout
-    const quizContainer = document.getElementById('quiz-container');
-    Object.assign(quizContainer.style, {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      minHeight: '60vh',
-      textAlign: 'center',
-      marginTop: '40px',
-      marginBottom: '40px',
-      padding: '20px',
-      width: '100%',
-      maxWidth: '600px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    });
+function centerQuizLayout() {
+  const quizContainer = document.getElementById('quiz-container');
+  if (!quizContainer) return;
 
-    document.body.style.overflowY = 'auto';
+  Object.assign(quizContainer.style, {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    minHeight: '60vh',
+    textAlign: 'center',
+    marginTop: '40px',
+    marginBottom: '40px',
+    padding: '20px',
+    width: '100%',
+    maxWidth: '600px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  });
 
-    document.getElementById('quiz-form').style.width = '100%';
+  document.body.style.overflowY = 'auto';
 
-    const optionsDiv = document.getElementById('quiz-options');
+  const form = document.getElementById('quiz-form');
+  if (form) form.style.width = '100%';
+
+  const optionsDiv = document.getElementById('quiz-options');
+  if (optionsDiv) {
     optionsDiv.style.display = 'flex';
     optionsDiv.style.flexDirection = 'column';
     optionsDiv.style.gap = '12px';
     optionsDiv.style.marginTop = '15px';
-
-    document.getElementById('timer').style.margin = '15px 0';
-    document.getElementById('next-btn').style.marginTop = '30px';
-  } catch (err) {
-    console.error('Error fetching quiz:', err);
   }
+
+  const timerBox = document.getElementById('timer');
+  if (timerBox) timerBox.style.margin = '15px 0';
+
+  const nextBtn = document.getElementById('next-btn');
+  if (nextBtn) nextBtn.style.marginTop = '30px';
 }
 
 function renderQuestion() {
@@ -68,8 +75,8 @@ function renderQuestion() {
   const container = document.getElementById('quiz-options');
   const questionText = document.getElementById('quiz-question');
   const counter = document.getElementById('quiz-counter');
-  counter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
 
+  counter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
   questionText.textContent = q.question;
   container.innerHTML = '';
 
@@ -134,16 +141,11 @@ function showTimesUp() {
 }
 
 function restartQuiz() {
-  location.reload(); // reload the page to restart quiz
-}
-function restartQuiz() {
   window.location.href = "quiz.html";
 }
 
-
 function nextQuestion() {
   const selected = document.querySelector('input[name="answer"]:checked');
-
   if (!selected) {
     alert('Please select an answer.');
     return;
@@ -227,7 +229,6 @@ async function submitQuiz() {
   }
 }
 
-// Result Page
 function showFinalResult(score, timeTaken) {
   const result = {
     score,
@@ -239,8 +240,5 @@ function showFinalResult(score, timeTaken) {
   pastResults.push(result);
   localStorage.setItem("quizResults", JSON.stringify(pastResults));
 
-  // Also redirect to results page (optional):
   window.location.href = "results.html";
-  
 }
-
