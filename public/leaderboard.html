@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard - QuizApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <nav class="nav-bar">
+        <a href="home.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Top 10 Players</h1>
+    <ol id="leaderboard-list"></ol>
+  </div>
+
+  <script>
+    fetch("/api/leaderboard")
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("leaderboard-list");
+        list.innerHTML = data.map(entry => `
+          <li>${entry.username}: ${entry.score} points in ${Math.round(entry.timeTaken)}s</li>
+        `).join("");
+      });
+  </script>
+</body>
+</html>

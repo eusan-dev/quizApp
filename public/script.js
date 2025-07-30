@@ -18,8 +18,15 @@ async function startQuiz() {
     gameId = data.gameId;
     questions = data.questions;
 
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('quiz-card').style.display = 'block';
+
     renderQuestion();
     startTimer();
+     } catch (err) {
+    console.error('Error starting quiz:', err);
+  }
+}
 
     // Center layout
     const quizContainer = document.getElementById('quiz-container');

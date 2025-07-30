@@ -86,6 +86,107 @@ body {
   font-weight: bold;
   margin: 20px 0;
 }
+/* Sign Up */
+.signup-container {
+  max-width: 400px;
+  margin: 120px auto;
+  padding: 40px;
+  border-radius: 15px;
+  background-color: #fff0f5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.signup-container h1 {
+  margin-bottom: 25px;
+  font-size: 2rem;
+  color: #553f5c;
+}
+
+#signup-form input {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+#signup-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #EDA9A9;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#signup-form button:hover {
+  background-color: #e68e8e;
+}
+
+#signup-msg {
+  margin-top: 15px;
+  font-size: 0.95rem;
+}
+/* Auth-box */
+.auth-box {
+  background-color: #ffe9ee;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  width: 300px;
+  margin: 4rem auto;
+}
+
+.auth-box h2 {
+  color: #553f5c;
+  margin-bottom: 1rem;
+}
+
+.auth-box input {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  margin: 10px 0;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.auth-box button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #EDA9A9;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.auth-box button:hover {
+  background-color: #e28d8d;
+}
+
+.auth-toggle {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #553f5c;
+}
+
+.auth-toggle a {
+  color: #553f5c;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 
 /* Quiz content */
 .question {
@@ -112,6 +213,7 @@ label {
 input[type="radio"] {
   margin-right: 10px;
 }
+
 
 /* Buttons */
 button {

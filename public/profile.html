@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile - QuizApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <nav class="nav-bar">
+        <a href="home.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Welcome, <span id="user"></span></h1>
+    <h2>Your Play History</h2>
+    <ul id="history-list"></ul>
+  </div>
+
+  <script>
+    const user = localStorage.getItem("username");
+    document.getElementById("user").textContent = user;
+    fetch(`/api/history/${user}`)
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("history-list");
+        list.innerHTML = data.map(entry => `
+          <li>Score: ${entry.score}/ ${entry.numQuestions}, Time: ${Math.round(entry.timeTaken)}s</li>
+        `).join("");
+      });
+  </script>
+</body>
+</html>
