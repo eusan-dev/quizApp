@@ -8,11 +8,11 @@ let db;
 
 async function connect() {
   await client.connect();
-  db = client.db('quizAppDB'); // ✅ Your DB name in MongoDB Atlas
+  db = client.db('quizAppDB'); 
 }
 
 function getCollection(name) {
-  return db.collection(name); // e.g., 'userScores', 'users'
+  return db.collection(name); 
 }
 
 module.exports = { connect, getCollection };
