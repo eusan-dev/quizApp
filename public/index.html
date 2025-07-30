@@ -60,14 +60,14 @@
 
       const data = await res.json();
       if (res.ok) {
-        msg.textContent = "✅ Signup successful! Redirecting...";
+        msg.textContent = "Signup successful! Redirecting...";
         msg.style.color = "#4CAF50";
         localStorage.setItem('username', username);
         setTimeout(() => {
           window.location.href = 'quiz.html';
         }, 1500);
       } else {
-        msg.textContent = `❌ ${data.error}`;
+        msg.textContent = `${data.error}`;
         msg.style.color = "#d6788d";
       }
     }

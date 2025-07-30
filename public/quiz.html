@@ -1,66 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>QuizApp - Quiz</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>QuizApp - Quiz</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body onload="startQuiz()">
+  <!-- Header Section -->
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <i class="ri-menu-line menu-icon" onclick="toggleMenu()"></i>
+      <nav class="nav-bar">
+        <a href="home.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
+  <!-- Quiz Setup Section -->
+  <div id="setup-screen" class="container">
+    <h2>Select how many questions to begin</h2>
+    <label for="question-amount">How many questions?</label>
+    <select id="question-amount">
+      <option value="5">5</option>
+      <option value="10" selected>10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+    </select>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+  <!-- Quiz Display Section -->
+  <div id="quiz-card" class="quiz-card" style="display: none;">
+    <div class="quiz-header">
+      <span id="quiz-category">Category: General</span>
+      <span id="quiz-counter">1 / 10</span>
+    </div>
+    <div id="timer" class="timer-box">Time Left: 90 seconds</div>
+    <form id="quiz-form">
+      <h2 id="quiz-question" class="question-text"></h2>
+      <div id="quiz-options" class="options"></div>
+    </form>
+    <button id="next-btn" onclick="nextQuestion()">Next</button>
+  </div>
 
-    <body>
-        <!-- Header Section -->
-        <header class="site-header">
-            <div class="header-content">
-                <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
-                <i class="ri-menu-line menu-icon" onclick="toggleMenu()"></i>
-                <nav class="nav-bar">
-                    <a href="home.html">Home</a>
-                    <a href="quiz.html">Take Quiz</a>
-                    <a href="results.html">Results</a>
-                    <a href="leaderboard.html">Leaderboard</a>
-                    <a href="profile.html">Profile</a>
-                </nav>
-        </header>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-wrapper">
+      <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament" />
+      <p>QuizApp © 2025</p>
+    </div>
+  </footer>
 
-        <!-- Quiz Taking Section -->
-        <div id="setup-screen" class="container">
-            <h2>Select how many questions to begin</h2>
-            <label for="question-amount">How many questions?</label>
-            <select id="question-amount">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
-            <button onclick="startQuiz()">Start Quiz</button>
-        </div>
-
-        <div class="quiz-card">
-            <div class="quiz-header">
-                <span id="quiz-category">Category: General</span>
-                <span id="quiz-counter">1 / 10</span>
-            </div>
-
-            <div id="timer" class="timer-box">Time Left: 90 seconds</div>
-
-            <form id="quiz-form">
-                <h2 id="quiz-question" class="question-text"></h2>
-                <div id="quiz-options" class="options"></div>
-            </form>
-
-            <button id="next-btn" onclick="nextQuestion()">Next</button>
-        </div>
-
-        <!-- Footer Section -->
-        <footer class="site-footer">
-            <div class="footer-wrapper">
-                <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
-                <p>QuizApp © 2025</p>
-            </div>
-        </footer>
-        <script src="script.js"></script>
-    </body>
-
+  <script src="script.js"></script>
+  <script>
+    function beginQuiz() {
+      const amount = document.getElementById('question-amount').value;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('quiz-box').style.display = 'block';
+      if (typeof loadQuiz === 'function') {
+        loadQuiz(amount);
+      } else {
+        console.error("loadQuiz(amount) function is not defined.");
+      }
+    }
+  </script>
+</body>
 </html>
