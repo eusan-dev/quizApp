@@ -1,109 +1,174 @@
-## QuizApp
+# 🎯 Quiz App — Full Stack Project
 
-A full-stack quiz game built collaboratively by:
+A timed trivia quiz application that allows users to sign up, play dynamic quizzes, view results, track play history, and compete on a leaderboard.
 
-- Eusan – Backend (Node.js, Express, MongoDB) & Deployment
-- Maria – Frontend HTML/CSS (UI & layout)
-- Tasfia – Frontend JavaScript (Logic, API, interactivity)
 
----
 
-## Project Description
+## Team Roles
 
-This is an interactive trivia game where users can:
+### Eusan Mahatab — Backend + MongoDB (Server & Database) & deployment 
+**Setup:**
+- Built backend server using Node.js + Express
+- Serves static files from the `public/` folder
+- Handles all API endpoints and logic
+- Connected MongoDB Atlas using `mongoose` and `.env`
 
-- Sign up / log in
-- Select how many questions they want (5, 10, 15, 20)
-- Take a 120-second timed quiz
-- See their score and time
-- View leaderboard and personal quiz history
+**Endpoints:**
 
----
+- `GET /api/start?amount=N`  
+  - Fetches N questions (default 10) from the Trivia API  
+  - Generates a unique `gameId`  
+  - Starts a 120-second quiz timer  
+  - Stores session in memory  
+  - Returns: `{ gameId, questions }`
 
-## Backend by Eusan (Node.js + MongoDB)
+- `POST /api/submit`  
+  - Receives: `{ gameId, username, userAnswers }`  
+  - Verifies if the 120s time limit was exceeded  
+  - Compares answers and calculates score  
+  - Deletes session  
+  - Saves `{ username, score, timeTaken, numQuestions }` in MongoDB  
+  - Returns: `{ score, timeTaken }`
 
-## Setup
-- Built with Node.js + Express
-- Uses MongoDB Atlas via Mongoose
-- `.env` holds the DB URI
-- Serves static frontend from `public/`
+- `GET /api/history/:username`  
+  - Fetches all quiz attempts by a specific user  
+  - Returns full quiz history sorted by date
 
-## API Endpoints
+- `GET /api/leaderboard`  
+  - Returns top 10 players sorted by:
+    - Highest score
+    - Fastest time (as tiebreaker)
 
-#### `GET /api/start?amount=N`
-- Fetches N quiz questions (default 10) from OpenTrivia API
-- Generates a unique `gameId`
-- Starts a 120-second timer
-- Stores session in memory
-- Returns: `{ gameId, questions }`
+- `POST /api/user/signup`  
+  - Registers new user with validation  
+  - Checks for unique username
 
-#### `POST /api/submit`
-- Receives: `{ gameId, username, userAnswers }`
-- Checks if user submitted within 120 seconds
-- Compares answers
-- Saves: `{ username, score, timeTaken, numQuestions }` to MongoDB
-- Returns: `{ score, timeTaken }`
-
-#### `GET /api/history/:username`
-- Returns quiz history for that user (most recent first)
-
-#### `GET /api/leaderboard`
-- Returns top 10 players by:
-  - Highest score
-  - Fastest time (tie-breaker)
-
-#### `POST /api/user/signup`
-- Validates input and checks for unique username
-- Stores new user in DB
-
-#### `POST /api/user/signin`
-- Validates existing user credentials
+- `POST /api/user/signin`  
+  - Validates existing user credentials
 
 ---
 
-## Frontend Logic by Tasfia (JavaScript)
+### Tasfia Shaheba — Frontend JavaScript (Quiz Logic and API Integration)
 
-### 💻 `script.js` Features
+**Setup:**
+- Developed `script.js` to control quiz behavior
+- Integrated with backend endpoints for starting games, submitting answers, leaderboard, and history
+- Used `localStorage` to store username and result summaries
+- Handled game session memory, score tracking, and sound effects
+- Applied dynamic DOM rendering for quiz flow
 
-#### `startQuiz()`
-- Gets question count from dropdown
-- Calls `/api/start?amount=N`
-- Starts timer
-- Renders first question
+**Key Features:**
 
-#### `nextQuestion()`
-- Validates selected answer
-- Plays correct/wrong sound
-- Moves to next question or submits at the end
+- `startQuiz()`  
+  - Starts a quiz with selected question amount (`/api/start?amount=N`)  
+  - Retrieves question amount using `localStorage.getItem("questionAmount")`
+  - Initializes 120-second countdown  
+  - Stores `gameId` and questions
+  - Renamed HTML call to safely use `if (window.startQuiz) window.startQuiz();`  
+  - Resolved conflict from double declarations of `startQuiz()`
 
-#### `submitQuiz()`
-- Sends gameId + userAnswers + username to `/api/submit`
-- Receives score and time, stores in localStorage
-- Redirects to `results.html`
+- `nextQuestion()`  
+  - Validates answer selection  
+  - Provides feedback with audio and visual cues (Correct! / Wrong!)
+  - Displays centered alert boxes that auto-fade
+  - Updates DOM elements like question count and category
+  - Navigates through questions and scores
+  - Ends quiz and triggers submission on last question
 
-#### `showFinalResult()`
-- Displays score and time taken from localStorage
+- `submitQuiz()`  
+  - Sends game data to `/api/submit` including: `gameId`, `userAnswers`, `username`, and `totalQuestions`  
+  - Receives and displays `score` and `timeTaken`  
+  - Shows friendly "Time's Up!" screen if timer runs out  
+  - Stores results in `localStorage` and redirects to `results.html`  
+  - Added alerts and error handling if score saving fails
 
-#### `startTimer()`
-- Starts a 120s countdown
-- Submits automatically when time runs out
+- `showFinalResult()`  
+  - Displays score, time, and timestamp  
+  - Pulls from `localStorage`
+
+- `startTimer()`  
+  - Starts and manages 120s countdown  
+  - Auto-submits quiz on timeout  
+  - Locks interaction and updates UI
+
+- **UI/UX Improvements:**
+  - Connected question amount buttons to script logic instead of relying on missing dropdowns
+  - Saved question amount from `quiz.html` using `localStorage.setItem("questionAmount", N)`
+  - Improved layout with `centerQuizLayout()` for all screen sizes
+  - Cleaned up spacing and alignment for quiz text, buttons, and containers
+  - Removed unused/legacy elements and dropdowns
+  - Ensured state consistency across screens (quiz → results)
+
 
 ---
 
-##  HTML/CSS by Maria (UI Design)
+### Maria Parache — Frontend HTML & CSS (UI Design & Structure)
 
-### Pages:
-- `index.html` – Home page with Start Quiz button
-- `quiz.html` – Quiz interface
-- `results.html` – Final score + play again
-- `signin.html` – User login
-- `leaderboard.html` – Top 10 players
-- `profile.html` – User's past quiz attempts
+**Setup:**
+- Designed and structured all HTML views:
+  - `index.html` — Main login/signup portal
+  - `home.html` — Welcome screen with quiz description
+  - `quiz.html` — Question interface
+  - `results.html` — Final results
+  - `profile.html` — Play history for user
+  - `leaderboard.html` — Top 10 players
+  - `signin.html` — Optional standalone login page
 
-###  Navbar:
-```html
-<a href="index.html">Home</a>
-<a href="quiz.html">Take Quiz</a>
-<a href="results.html">Results</a>
-<a href="leaderboard.html">Leaderboard</a>
-<a href="profile.html">Profile</a>
+**Styling (`style.css`):**
+- Soft pastel color palette: `#EDA9A9`, `#fcd6dc`, `#ffeef2`
+- Responsive layout with `.container`, `.auth-box`, and `.site-header/footer`
+- Input fields and buttons designed for mobile-friendliness
+- Quiz UI styled for clarity and accessibility
+- Leaderboard styled with hover effects and clean ranking rows
+
+---
+
+## 🔄 Application Flow
+
+1. **Sign In / Sign Up**  
+   - Users can create or log into accounts
+   - Stored in MongoDB with validation
+
+2. **User Profile Page**  
+   - Displays personalized welcome and play history
+
+3. **Quiz Selection**  
+   - User chooses number of questions: 5 / 10 / 15 / 20
+
+4. **Gameplay**  
+   - All questions must be answered within 120 seconds  
+   - Score and time are tracked
+
+5. **Results**  
+   - Score and time shown
+   - Stored in MongoDB and localStorage
+
+6. **Leaderboard**  
+   - Ranks top 10 players by:
+     - Highest score
+     - Fastest time as tiebreaker
+
+---
+
+## 🧭 Navigation Bar
+
+- `Home` — index.html
+- `Quiz` — quiz.html
+- `Result` — results.html
+- `Leaderboard` — leaderboard.html
+
+---
+
+## 💻 How to Run Locally
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/your-username/quizApp.git
+cd quizApp
+npm install
+MONGO_URI=your_mongo_atlas_connection_string
+node server.js
+# or use nodemon if installed
+nodemon server.js
+http://localhost:3000
+
