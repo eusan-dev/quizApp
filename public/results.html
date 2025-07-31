@@ -38,18 +38,20 @@
     ">Restart Quiz</button>
   </div>
 
-  <script>
-    const results = JSON.parse(localStorage.getItem('quizResults')) || [];
-    const latest = results[results.length - 1];
+<script>
+  const results = JSON.parse(localStorage.getItem('quizResults')) || [];
+  const latest = results[results.length - 1];
 
-    if (latest) {
-      document.getElementById('latest-score').textContent = `Your Score: ${latest.score}/10!`;
-      document.getElementById('latest-time').textContent = `Time Taken: ${latest.timeTaken} seconds`;
-    }
-    function restartQuiz() {
-      window.location.href = "quiz.html";
-    }
-  </script>
+  if (latest) {
+    document.getElementById('latest-score').textContent = `Your Score: ${latest.score}/${latest.totalQuestions}!`;
+    document.getElementById('latest-time').textContent = `Time Taken: ${latest.timeTaken} seconds`;
+  }
+
+  function restartQuiz() {
+    window.location.href = "quiz.html";
+  }
+</script>
+
 
   <!-- Footer Section -->
   <footer class="site-footer">

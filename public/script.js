@@ -6,14 +6,15 @@ let score = 0;
 let timeLeft = 90;
 let timer;
 
-// Sound effects
 const correctSound = new Audio('correct.wav');
 const wrongSound = new Audio('wrong.ogg');
 const timesUpSound = new Audio('ring.mp3');
 
 async function startQuiz() {
   try {
-    const amount = document.getElementById('question-amount')?.value || 10;
+    // ✅ Use localStorage instead of missing <select> element
+    const amount = parseInt(localStorage.getItem('questionAmount')) || 10;
+
     const res = await fetch(`/api/start?amount=${amount}`);
     const data = await res.json();
     gameId = data.gameId;
@@ -208,13 +209,22 @@ function alertBox(message) {
 async function submitQuiz() {
   clearInterval(timer);
 
-  try {
-    const username = localStorage.getItem("username");
+  const username = localStorage.getItem("username");
+  if (!username) {
+    alert("❗ Please log in before submitting.");
+    return;
+  }
 
+  try {
     const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gameId, userAnswers, username })
+      body: JSON.stringify({ 
+        gameId, 
+        userAnswers, 
+        username, 
+        totalQuestions: questions.length
+      })
     });
 
     const data = await res.json();
@@ -222,10 +232,12 @@ async function submitQuiz() {
     if (res.ok) {
       showFinalResult(data.score, data.timeTaken);
     } else {
-      alert(data.error);
+      alert(data.error || "Server responded with an error.");
+      console.error("Server error:", data);
     }
   } catch (err) {
-    console.error('Error submitting:', err);
+    console.error('❌ Error submitting quiz:', err);
+    alert("⚠️ Failed to save score to database.");
   }
 }
 
@@ -233,6 +245,7 @@ function showFinalResult(score, timeTaken) {
   const result = {
     score,
     timeTaken: Math.round(timeTaken),
+    totalQuestions: questions.length,
     timestamp: new Date().toLocaleString()
   };
 

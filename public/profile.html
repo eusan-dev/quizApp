@@ -1,60 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Profile - QuizApp</title>
- <link rel="stylesheet" href="style.css">
+  <title>Profile - QuizApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-container {
+      max-width: 600px;
+      margin: 100px auto;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    #user {
+      color: #553f5c;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #553f5c;
+      margin-bottom: 20px;
+    }
+
+    .profile-container h2 {
+      margin-top: 30px !important; /* ✅ override negative global margin */
+      color: #553f5c;
+      margin-bottom: 20px;
+    }
+
+    #history-container p {
+      margin: 10px 0;
+      font-size: 1.1rem;
+      color: #553f5c;
+      background-color: #fff0f5;
+      padding: 12px 15px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    #history-container p:hover {
+      background-color: #fcd6dc;
+    }
+  </style>
 </head>
+
 <body>
- <header class="site-header">
-   <div class="header-content">
-     <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
-     <nav class="nav-bar">
-       <a href="home.html">Home</a>
-       <a href="quiz.html">Take Quiz</a>
-       <a href="results.html">Results</a>
-       <a href="leaderboard.html">Leaderboard</a>
-       <a href="profile.html">Profile</a>
-     </nav>
-   </div>
- </header>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <nav class="nav-bar">
+        <a href="home.html">Home</a>
+        <a href="quiz.html">Take Quiz</a>
+        <a href="results.html">Results</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
 
+  <!-- Profile Content -->
+  <div class="profile-container">
+    <h1>Welcome, <span id="user"></span></h1>
+    <h2>Your Play History</h2>
+    <div id="history-container"></div>
+  </div>
 
- <div class="container">
-   <h1>Welcome, <span id="user"></span></h1>
-   <h2>Your Play History</h2>
-   <div id="history-container"></div>
- </div>
+  <!-- Script -->
+  <script>
+    const username = localStorage.getItem("username");
+    document.getElementById("user").textContent = username;
 
+    fetch(`/api/history/${username}`)
+      .then(res => res.json())
+      .then(history => {
+        const container = document.getElementById('history-container');
 
- <script>
-   const username = localStorage.getItem("username");
-   document.getElementById("user").textContent = username;
+        if (history.length === 0) {
+          container.innerHTML = "<p>No quiz history yet.</p>";
+          return;
+        }
 
+        history.forEach(entry => {
+          const row = document.createElement('p');
+          row.textContent = `Scored ${entry.score}/${entry.numQuestions} in ${Math.round(entry.timeTaken)} sec on ${new Date(entry.timestamp).toLocaleString()}`;
+          container.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load history:", err);
+        document.getElementById("history-container").innerHTML = "<p style='color:red;'>Failed to load history.</p>";
+      });
+  </script>
 
-   fetch(`/api/history/${username}`)
-     .then(res => res.json())
-     .then(history => {
-       const container = document.getElementById('history-container');
-
-
-       if (history.length === 0) {
-         container.innerHTML = "<p>No quiz history yet.</p>";
-         return;
-       }
-
-
-       history.forEach(entry => {
-         const row = document.createElement('p');
-         row.textContent = `Scored ${entry.score}/${entry.numQuestions} in ${Math.round(entry.timeTaken)} sec on ${new Date(entry.timestamp).toLocaleString()}`;
-         container.appendChild(row);
-       });
-     })
-     .catch(err => {
-       console.error("Failed to load history:", err);
-       document.getElementById("history-container").innerHTML = "<p style='color:red;'>Failed to load history.</p>";
-     });
- </script>
- <!-- Footer -->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-wrapper">
       <img src="footer-ornament.svg" alt="Footer Design" class="footer-ornament">
