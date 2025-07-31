@@ -1,26 +1,39 @@
-/* Reset and base styles */
+/* Reset and base */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
-  height: 100%;
+
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #553f5c;
   background-color: #ffffff;
+  color: #553f5c;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
+
+
+/* Layout */
+.container {
+  max-width: 500px;
+  margin: 100px auto;
+  padding-top: 100px;
+  text-align: center;
+}
+
 
 /* Header */
 .site-header {
   background-color: #fcd6dc;
   padding: 1.5rem 0;
   text-align: center;
+  position: relative;
   z-index: 10;
 }
+
 
 .header-content {
   max-width: 1000px;
@@ -31,25 +44,38 @@ html, body {
   align-items: center;
 }
 
+
 .logo {
   font-size: 2.2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
+
 .logo a {
   text-decoration: none;
   color: #553f5c;
 }
 
+
 .logo span {
   color: #d6788d;
 }
+
+
+.menu-icon {
+  font-size: 1.5rem;
+  color: #553f5c;
+  cursor: pointer;
+  display: none;
+}
+
 
 .nav-bar {
   display: flex;
   gap: 1.5rem;
 }
+
 
 .nav-bar a {
   text-decoration: none;
@@ -57,27 +83,89 @@ html, body {
   color: #553f5c;
 }
 
-/* Auth Main */
+
+/* Timer & Warnings */
+#timer {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #d6788d;
+  margin-bottom: 20px;
+}
+
+
+.warning {
+  color: #c23b22;
+  font-weight: bold;
+  margin: 20px 0;
+}
+/* Sign Up */
+.signup-container {
+  max-width: 400px;
+  margin: 120px auto;
+  padding: 40px;
+  border-radius: 12px;
+  background-color: #fff0f5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+.signup-container h1 {
+  margin-bottom: 25px;
+  font-size: 2rem;
+  color: #553f5c;
+}
+
+#signup-form input {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+#signup-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #EDA9A9;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#signup-form button:hover {
+  background-color: #e68e8e;
+}
+#signup-msg {
+  margin-top: 15px;
+  font-size: 0.95rem;
+}
+
+/* Auth-box */
 .auth-main {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #ffffff;
+  padding: 30px 20px;
 }
 
-/* Auth Box (Sign up / Login) */
 .auth-box {
   background-color: #ffe9ee;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   text-align: center;
   width: 320px;
 }
 
 .auth-box h2 {
   color: #553f5c;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4rem;
   font-size: 1.8rem;
   font-weight: bold;
 }
@@ -106,10 +194,137 @@ html, body {
 .auth-box button:hover {
   background-color: #e28d8d;
 }
+/* Setup Quiz Styling */
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 80vh;
+}
+.setup-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+  color: #4f345a;
+}
+.setup-card {
+  background: #ffeef2;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.setup-label {
+  font-size: 1rem;
+  color: #4f345a;
+}
+.setup-select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.setup-button {
+  background-color: #ee9ca7;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.setup-button:hover {
+  background-color: #e68a95;
+}
+/* Quiz content */
+.question {
+  margin-bottom: 30px;
+  text-align: left;
+}
+.question p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+label {
+  display: block;
+  background-color: #f5f5f5;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+input[type="radio"] {
+  margin-right: 10px;
+}
+/* Buttons */
+button {
+  background-color: #EDA9A9;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+
+button:hover {
+  background-color: #EDA9A9;
+}
+
+
+/* Results */
+#results-container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+
+#results-container h2 {
+  font-size: 2rem;
+  color: #553f5c;
+  margin-bottom: 10px;
+}
+
+
+#results-container p {
+  font-size: 1.2rem;
+  color: #553f5c;
+  margin: 8px 0;
+}
+
+
+.results-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #553f5c;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.score-line,
+.time-line {
+  font-size: 1.2rem;
+  color: #553f5c;
+  text-align: center;
+  margin: 10px 0;
+}
 
 /* Leaderboard */
 #leaderboard-container {
-  margin: 40px auto 80px;
+  margin: 20px auto 60px;
   padding: 20px;
   background-color: #fff0f5;
   border-radius: 15px;
@@ -136,7 +351,7 @@ html, body {
 
 h2 {
   text-align: center;
-  margin-top: 40px;
+  margin-top: -120px;
   color: #553f5c;
   font-size: 2rem;
 }
@@ -162,7 +377,7 @@ h2 {
 
 .site-footer p {
   margin-top: -30px;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
   font-size: 0.9rem;
   color: #553f5c;
   font-weight: bold;
