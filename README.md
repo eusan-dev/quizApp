@@ -6,45 +6,66 @@ A timed trivia quiz application that allows users to sign up, play dynamic quizz
 
 ## Team Roles
 
-### Eusan Mahatab — Backend + MongoDB (Server & Database) & deployment 
-**Setup:**
-- Built backend server using Node.js + Express
-- Serves static files from the `public/` folder
-- Handles all API endpoints and logic
-- Connected MongoDB Atlas using `mongoose` and `.env`
+### Eusan Mahatab — Backend + MongoDB (Server & Database) & Deployment Lead
 
-**Endpoints:**
+**Responsibilities:**
+- Built the entire backend server using **Node.js**, **Express**, and **MongoDB**
+- Initialized project and managed GitHub repository as the **repo owner**
+- Wrote and formatted the full `README.md` documentation
+- Handled all backend logic, routes, data models, and API integration
+- Created **two separate MongoDB databases**:
+  - `users` collection for authentication
+  - `userScores` collection for tracking quiz results
+- Fully deployed the live app on **Render** including environment setup and domain
+- Connected the backend with MongoDB Atlas using `.env` securely
 
-- `GET /api/start?amount=N`  
-  - Fetches N questions (default 10) from the Trivia API  
+---
+
+**API Endpoints:**
+
+- **`GET /api/start?amount=N`**  
+  - Fetches `N` quiz questions from the Trivia API (default 10)  
   - Generates a unique `gameId`  
   - Starts a 120-second quiz timer  
   - Stores session in memory  
   - Returns: `{ gameId, questions }`
 
-- `POST /api/submit`  
+- **`POST /api/submit`**  
   - Receives: `{ gameId, username, userAnswers }`  
-  - Verifies if the 120s time limit was exceeded  
-  - Compares answers and calculates score  
-  - Deletes session  
-  - Saves `{ username, score, timeTaken, numQuestions }` in MongoDB  
+  - Checks if submission is within the time limit  
+  - Compares answers, calculates score  
+  - Saves: `{ username, score, timeTaken, numQuestions }` to `userScores` in MongoDB  
   - Returns: `{ score, timeTaken }`
 
-- `GET /api/history/:username`  
-  - Fetches all quiz attempts by a specific user  
-  - Returns full quiz history sorted by date
+- **`GET /api/history/:username`**  
+  - Retrieves full quiz attempt history for a user from the `userScores` collection  
+  - Returns data sorted by date/time
 
-- `GET /api/leaderboard`  
-  - Returns top 10 players sorted by:
+- **`GET /api/leaderboard`**  
+  - Returns top 10 players  
+  - Sorted by:
     - Highest score
     - Fastest time (as tiebreaker)
 
-- `POST /api/user/signup`  
-  - Registers new user with validation  
-  - Checks for unique username
+- **`POST /api/user/signup`**  
+  - Creates a new user account  
+  - Validates inputs and ensures unique usernames  
+  - Stores users in the `users` collection in MongoDB
 
-- `POST /api/user/signin`  
-  - Validates existing user credentials
+- **`POST /api/user/signin`**  
+  - Authenticates an existing user based on stored credentials  
+  - Used for login and access to profile/play history
+
+---
+
+**Deployment:**
+- Deployed the entire full-stack app (backend and frontend) on **Render**
+- Managed `.env` configuration securely in the Render dashboard
+- Handled MongoDB URI integration and ensured live server is connected
+- Verified all endpoints, session handling, and frontend/backend integration work live
+
+Live App: `https://quizapp-enwg.onrender.com/`
+
 
 ---
 
@@ -105,57 +126,78 @@ A timed trivia quiz application that allows users to sign up, play dynamic quizz
 ### Maria Parache — Frontend HTML & CSS (UI Design & Structure)
 
 **Setup:**
-- Designed and structured all HTML views:
-  - `index.html` — Main login/signup portal
-  - `home.html` — Welcome screen with quiz description
-  - `quiz.html` — Question interface
-  - `results.html` — Final results
-  - `profile.html` — Play history for user
-  - `leaderboard.html` — Top 10 players
-  - `signin.html` — Optional standalone login page
+- Created the frontend using **HTML** and **CSS**. Each `.html` file corresponds to a specific section of the application and is styled using `style.css`.
+
+**HTML Files & Structure:**
+
+- **`index.html`**  
+  - Acts as the main authentication portal  
+  - Includes Sign Up and Log In forms within toggleable containers  
+  - Input fields are validation-ready for username, email, and password  
+  - Redirects to the quiz on successful authentication (via JavaScript)  
+  - Contains site-wide header and footer with branding  
+
+- **`home.html`**  
+  - Welcome/start page with a quiz description and timer warning  
+  - Central “Start Quiz” button linked to `quiz.html`  
+  - Structured using `.container` class for spacing and alignment  
+
+- **`quiz.html`**  
+  - Quiz setup interface where users choose number of questions (5–20)  
+  - Hidden main quiz UI includes:
+    - `#timer` element (styled for visibility)
+    - Category and question tracker
+    - `#quiz-question` and dynamically generated options
+    - Sticky “Next” button  
+
+- **`results.html`**  
+  - Displays final quiz results:
+    - Score in `X/10` format
+    - Time taken in seconds
+  - Includes a “Restart Quiz” button with soft hover transitions  
+  - Uses centered `.container` layout with large headings  
+
+- **`profile.html`**  
+  - Displays a personalized welcome using the logged-in username  
+  - Lists user’s past attempts using dynamically generated rows inside `#history-container`  
+
+- **`leaderboard.html`**  
+  - Shows top 10 players sorted by score and time  
+  - Dynamically updates with rank, username, score, and time  
+  - Styled using `#leaderboard-container` with hover effects and responsive layout  
+
+- **`signin.html`**  
+  - Standalone login screen for users  
+  - Consistent UI with `index.html` using the same `.container` layout and form styling  
+
+---
 
 **Styling (`style.css`):**
-- Soft pastel color palette: `#EDA9A9`, `#fcd6dc`, `#ffeef2`
-- Responsive layout with `.container`, `.auth-box`, and `.site-header/footer`
-- Input fields and buttons designed for mobile-friendliness
-- Quiz UI styled for clarity and accessibility
-- Leaderboard styled with hover effects and clean ranking rows
 
----
+- **Color & Typography:**
+  - Soft pastel palette: `#EDA9A9`, `#fcd6dc`, `#ffeef2`
+  - Clean sans-serif font stack for a modern, readable look  
 
-## 🔄 Application Flow
+- **Layout & Components:**
+  - `.container` sets max-width and centers content  
+  - `.auth-box`, `.signup-container`: card-style containers with rounded corners and shadows  
+  - `.site-header` and `.site-footer`: styled with spacing and consistent branding  
 
-1. **Sign In / Sign Up**  
-   - Users can create or log into accounts
-   - Stored in MongoDB with validation
+- **Forms & Inputs:**
+  - Inputs styled with padding, border-radius, and interactive hover feedback  
+  - Buttons are rounded-pill style with transitions on hover  
+  - Responsive full-width layout for mobile  
 
-2. **User Profile Page**  
-   - Displays personalized welcome and play history
+- **Quiz-Specific Styles:**
+  - `.question`, `.label`, `.options`: block-style with background and margin for mobile-friendly design  
+  - `#timer`: large, bold, and color-highlighted (`#d6788d`)  
+  - Quiz layout is touch-friendly and vertically stacked  
 
-3. **Quiz Selection**  
-   - User chooses number of questions: 5 / 10 / 15 / 20
+- **Results & Leaderboard:**
+  - Score/time outputs use enlarged fonts and spacing  
+  - `.results-title`, `.score-line`, `.time-line`: center-aligned for visibility  
+  - `#leaderboard-container`: boxed layout with shadows and hover interaction for ranked players  
 
-4. **Gameplay**  
-   - All questions must be answered within 120 seconds  
-   - Score and time are tracked
-
-5. **Results**  
-   - Score and time shown
-   - Stored in MongoDB and localStorage
-
-6. **Leaderboard**  
-   - Ranks top 10 players by:
-     - Highest score
-     - Fastest time as tiebreaker
-
----
-
-## 🧭 Navigation Bar
-
-- `Home` — index.html
-- `Quiz` — quiz.html
-- `Result` — results.html
-- `Leaderboard` — leaderboard.html
 
 ---
 
