@@ -351,10 +351,11 @@ button:hover {
 
 h2 {
   text-align: center;
-  margin-top: -120px;
+  margin-top: 20px;
   color: #553f5c;
   font-size: 2rem;
 }
+
 
 /* Footer */
 .site-footer {
@@ -382,6 +383,20 @@ h2 {
   color: #553f5c;
   font-weight: bold;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Responsive */
 @media (max-width: 600px) {

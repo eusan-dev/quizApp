@@ -2,49 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuizApp - Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .question-select-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .question-button {
+      padding: 10px 20px;
+      border: 2px solid #EDA9A9;
+      border-radius: 8px;
+      background-color: white;
+      color: #EDA9A9;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .question-button:hover {
+      background-color: #EDA9A9;
+      color: white;
+    }
+
+    .question-button.selected {
+      background-color: #EDA9A9;
+      color: white;
+      font-weight: bold;
+    }
+
+    .start-button {
+      margin-top: 15px;
+      padding: 10px 24px;
+      background-color: #EDA9A9;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #quiz-question {
+      font-size: 1.3rem;
+      margin: 20px 0 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #quiz-options label {
+      font-size: 1rem;
+      text-align: left;
+    }
+
+    #timer {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .quiz-card {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    #quiz-form {
+      padding: 0 10px;
+    }
+
+    #next-btn {
+      display: block;
+      margin: 25px auto 0;
+    }
+  </style>
 </head>
 <body>
+
   <!-- Header Section -->
   <header class="site-header">
     <div class="header-content">
-      <div class="logo"><a href="index.html">QuizApp<span>?</span></a></div>
+      <div class="logo"><a href="home.html">QuizApp<span>?</span></a></div>
       <i class="ri-menu-line menu-icon" onclick="toggleMenu()"></i>
       <nav class="nav-bar">
         <a href="home.html">Home</a>
-        <a href="quiz.html">Take Quiz</a>
+        <a href="quiz.html" class="active">Take Quiz</a>
         <a href="results.html">Results</a>
         <a href="leaderboard.html">Leaderboard</a>
         <a href="profile.html">Profile</a>
       </nav>
     </div>
   </header>
+
   <!-- Quiz Setup Section -->
   <div id="setup-screen" class="container">
     <h2>Select how many questions to begin</h2>
-    <label for="question-amount">How many questions?</label>
-    <select id="question-amount">
-      <option value="5">5</option>
-      <option value="10" selected>10</option>
-      <option value="15">15</option>
-      <option value="20">20</option>
-    </select>
-    <button onclick="startQuiz()">Start Quiz</button>
+    <div class="question-select-wrapper">
+      <button class="question-button" data-amount="5">5</button>
+      <button class="question-button selected" data-amount="10">10</button>
+      <button class="question-button" data-amount="15">15</button>
+      <button class="question-button" data-amount="20">20</button>
+    </div>
+    <button class="start-button" id="start-button">Start Quiz</button>
   </div>
+
   <!-- Quiz Display Section -->
   <div id="quiz-card" class="quiz-card" style="display: none;">
     <div class="quiz-header">
       <span id="quiz-category">Category: General</span>
-      <span id="quiz-counter">1 / 10</span>
+      <span id="quiz-counter">Question 1 of 10</span>
     </div>
-    <div id="timer" class="timer-box">Time Left: 90 seconds</div>
+    <div id="timer">Time Left: 90 seconds</div>
     <form id="quiz-form">
-      <h2 id="quiz-question" class="question-text"></h2>
+      <h2 id="quiz-question" class="question-text">Question text appears here</h2>
       <div id="quiz-options" class="options"></div>
     </form>
     <button id="next-btn" onclick="nextQuestion()">Next</button>
   </div>
+
   <!-- Footer Section -->
   <footer class="site-footer">
     <div class="footer-wrapper">
@@ -52,6 +142,25 @@
       <p>QuizApp © 2025</p>
     </div>
   </footer>
+
+  <!-- Script Load Order: logic first, then page controller -->
   <script src="script.js"></script>
+
+  <script>
+    let selectedAmount = 10;
+
+    document.querySelectorAll('.question-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.question-button').forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+        selectedAmount = parseInt(button.dataset.amount);
+      });
+    });
+
+    document.getElementById('start-button').addEventListener('click', () => {
+      localStorage.setItem("questionAmount", selectedAmount);
+      startQuiz(); // calls startQuiz from script.js
+    });
+  </script>
 </body>
 </html>
